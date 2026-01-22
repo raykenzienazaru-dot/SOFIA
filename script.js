@@ -36,11 +36,11 @@
 
     // Initialize demo values
     function initializeDemoValues() {
-      document.getElementById("suhu").innerHTML = '24.5<span class="card-unit">°C</span>';
-      document.getElementById("lembap").innerHTML = '65<span class="card-unit">%</span>';
+      document.getElementById("suhu").innerHTML = '0<span class="card-unit">°C</span>';
+      document.getElementById("lembap").innerHTML = '0<span class="card-unit">%</span>';
       document.getElementById("gas").textContent = "LOW";
       document.getElementById("motion").textContent = "CLEAR";
-      document.getElementById("distance").innerHTML = '45<span class="card-unit">cm</span>';
+      document.getElementById("distance").innerHTML = '0<span class="card-unit">cm</span>';
       document.getElementById("water").textContent = "NORMAL";
       document.getElementById("flame").textContent = "NONE";
       document.getElementById("status").textContent = "All systems operational. Environment parameters within normal ranges.";
