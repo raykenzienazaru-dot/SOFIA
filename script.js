@@ -16,17 +16,16 @@
 
     // Initialize with random values for demo (will be replaced by real data)
     function initializeDemoValues() {
-      document.getElementById("suhu").textContent = "24.5°C";
-      document.getElementById("lembap").textContent = "65%";
+      document.getElementById("suhu").textContent = "0°C";
+      document.getElementById("lembap").textContent = "0%";
       document.getElementById("gas").textContent = "LOW";
       document.getElementById("motion").textContent = "CLEAR";
-      document.getElementById("distance").textContent = "45cm";
+      document.getElementById("distance").textContent = "0cm";
       document.getElementById("water").textContent = "NORMAL";
+       document.getElementById("flame").textContent = "0";
       document.getElementById("status").textContent = "All systems operational";
       document.getElementById("ai").textContent = "Environment normal, no anomalies detected";
-      document.getElementById("ai").textContent = "🚨 FIRE EMERGENCY DETECTED";
-document.getElementById("ai").classList.add("alert");
-
+     
     }
 
     // Call initialization
@@ -101,7 +100,19 @@ document.getElementById("ai").classList.add("alert");
         } else {
           element.style.color = "#10b981";
         }
-      } else if (topic === "sofia/status") {
+      } 
+      else if (topic === "sofia/flame") {
+  element = document.getElementById("flame");
+
+  if (value === "1") {
+    displayValue = "🔥 API TERDETEKSI";
+    element.classList.add("flame-alert");
+  } else {
+    displayValue = "✅ AMAN";
+    element.classList.remove("flame-alert");
+  }
+}
+      else if (topic === "sofia/status") {
         element = document.getElementById("status");
         displayValue = value;
         
@@ -128,17 +139,7 @@ document.getElementById("ai").classList.add("alert");
           aiContent.classList.add("normal");
         }
       }
-else if (topic === "sofia/flame") {
-  element = document.getElementById("flame");
 
-  if (value === "1") {
-    displayValue = "🔥 API TERDETEKSI";
-    element.classList.add("flame-alert");
-  } else {
-    displayValue = "✅ AMAN";
-    element.classList.remove("flame-alert");
-  }
-}
 
       // Update element if found
       if (element && displayValue) {

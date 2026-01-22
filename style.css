@@ -224,6 +224,17 @@
       gap: 8px;
     }
     
+ .flame-alert {
+  animation: flamePulse 1s infinite;
+  color: #ef4444;
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+}
+
+@keyframes flamePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
 
     /* Status Panel */
     .status-panel {
@@ -357,14 +368,4 @@
     .motion-normal {
       color: #10b981;
     }
-  .flame-alert {
-  animation: flamePulse 1s infinite;
-  color: #ef4444;
-  text-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
-}
-
-@keyframes flamePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
+ 
