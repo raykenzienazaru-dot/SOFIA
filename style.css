@@ -368,4 +368,9 @@
     .motion-normal {
       color: #10b981;
     }
- 
+ .card {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
