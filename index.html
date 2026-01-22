@@ -9,21 +9,25 @@
    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+    <div class="container">
     <!-- Header -->
     <div class="header">
       <div class="header-left">
-        <h1>
-          <div class="logo">
-            <i class="fas fa-brain"></i>
+        <div class="logo-container">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div>
+          <h1>SOFIA Smart Environment Dashboard</h1>
+          <div class="header-subtitle">
+            <i class="fas fa-satellite-dish"></i>
+            <span>Real-time IoT monitoring & AI analysis</span>
           </div>
-          SOFIA Smart Environment Dashboard
-        </h1>
-        <p style="color: var(--text-secondary); margin-top: 8px;">Real-time monitoring of environmental parameters</p>
+        </div>
       </div>
       <div class="connection-status">
         <div class="status-dot" id="statusDot"></div>
         <span id="conn">Connecting to EMQX Broker...</span>
+        <i class="fas fa-sync-alt fa-spin" style="margin-left: auto; opacity: 0.7;"></i>
       </div>
     </div>
 
@@ -31,120 +35,206 @@
     <div class="dashboard">
       <!-- Temperature Card -->
       <div class="card temperature">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-thermometer-half"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-thermometer-half"></i>
+              </div>
+              <div>
+                <div class="card-title">TEMPERATURE</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Optimal</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="temp-time">--:--</div>
           </div>
-          <div class="card-title">TEMPERATURE</div>
-        </div>
-        <div class="card-value" id="suhu">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Room temperature monitoring</span>
+          <div class="card-value-container">
+            <div class="card-value" id="suhu">24.5<span class="card-unit">°C</span></div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Room temperature monitoring</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Humidity Card -->
       <div class="card humidity">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-tint"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-tint"></i>
+              </div>
+              <div>
+                <div class="card-title">HUMIDITY</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Optimal</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="humidity-time">--:--</div>
           </div>
-          <div class="card-title">HUMIDITY</div>
-        </div>
-        <div class="card-value" id="lembap">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Air humidity level</span>
+          <div class="card-value-container">
+            <div class="card-value" id="lembap">65<span class="card-unit">%</span></div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Air humidity level</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Gas Level Card -->
       <div class="card gas">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-wind"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-wind"></i>
+              </div>
+              <div>
+                <div class="card-title">GAS LEVEL</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Safe</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="gas-time">--:--</div>
           </div>
-          <div class="card-title">GAS LEVEL</div>
-        </div>
-        <div class="card-value" id="gas">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Air quality monitoring</span>
+          <div class="card-value-container">
+            <div class="card-value" id="gas">LOW</div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Air quality monitoring</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Motion Card -->
       <div class="card motion">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-running"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-running"></i>
+              </div>
+              <div>
+                <div class="card-title">MOTION DETECTION</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Clear</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="motion-time">--:--</div>
           </div>
-          <div class="card-title">MOTION DETECTION</div>
-        </div>
-        <div class="card-value" id="motion">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Presence detection sensor</span>
+          <div class="card-value-container">
+            <div class="card-value motion-normal" id="motion">CLEAR</div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Presence detection sensor</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Distance Card -->
       <div class="card distance">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-ruler-vertical"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-ruler-vertical"></i>
+              </div>
+              <div>
+                <div class="card-title">DISTANCE</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Safe</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="distance-time">--:--</div>
           </div>
-          <div class="card-title">DISTANCE</div>
-        </div>
-        <div class="card-value" id="distance">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Ultrasonic distance measurement</span>
+          <div class="card-value-container">
+            <div class="card-value" id="distance">45<span class="card-unit">cm</span></div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Ultrasonic distance measurement</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Water Level Card -->
       <div class="card water">
-        <div class="card-header">
-          <div class="card-icon">
-            <i class="fas fa-water"></i>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-water"></i>
+              </div>
+              <div>
+                <div class="card-title">WATER LEVEL</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>Normal</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="water-time">--:--</div>
           </div>
-          <div class="card-title">WATER LEVEL</div>
+          <div class="card-value-container">
+            <div class="card-value" id="water">NORMAL</div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Liquid level monitoring</span>
+            </div>
+          </div>
         </div>
-        <div class="card-value" id="water">--</div>
-        <div class="card-footer">
-          <i class="fas fa-info-circle"></i>
-          <span>Liquid level monitoring</span>
+      </div>
+
+      <!-- Flame Card -->
+      <div class="card flame">
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <div class="card-icon">
+                <i class="fas fa-fire"></i>
+              </div>
+              <div>
+                <div class="card-title">FLAME DETECTION</div>
+                <div class="card-status">
+                  <div class="status-indicator"></div>
+                  <span>No flame</span>
+                </div>
+              </div>
+            </div>
+            <div class="last-updated" id="flame-time">--:--</div>
+          </div>
+          <div class="card-value-container">
+            <div class="card-value" id="flame">NONE</div>
+            <div class="card-footer">
+              <span><i class="fas fa-info-circle"></i> Fire detection sensor</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card flame">
-  <div class="card-header">
-    <div class="card-icon">
-      <i class="fas fa-fire"></i>
-    </div>
-    <div class="card-title">FLAME DETECTION</div>
-  </div>
-  <div class="card-value" id="flame">--</div>
-  <div class="card-footer">
-    <i class="fas fa-info-circle"></i>
-    <span>Infrared fire detection sensor</span>
-  </div>
-</div>
 
     <!-- Status Panel -->
     <div class="status-panel">
       <div class="status-card">
         <h3><i class="fas fa-chart-line"></i> SYSTEM STATUS</h3>
-        <div class="status-content" id="status">
-          Waiting for system status update...
+        <div class="status-content normal" id="status">
+          All systems operational. Environment parameters within normal ranges.
         </div>
       </div>
       <div class="status-card">
         <h3><i class="fas fa-robot"></i> AI ANALYSIS</h3>
-        <div class="status-content" id="ai">
-          AI module initializing...
+        <div class="status-content normal" id="ai">
+          AI analysis shows normal environmental conditions. No anomalies detected.
         </div>
       </div>
     </div>
@@ -168,14 +258,17 @@
           <i class="fas fa-cloud"></i>
           <span>Real-time Dashboard</span>
         </div>
+        <div class="tech-item">
+          <i class="fas fa-brain"></i>
+          <span>AI Analytics</span>
+        </div>
       </div>
-      <div class="footer-text">
-        &copy; 2026 Smart Environment Monitoring System
+      <div class="copyright">
+        &copy; 2026 Smart Environment Monitoring System • v2.1.0
       </div>
     </div>
-    <!-- Flame Detection Card -->
-
   </div>
+
  <script src="script.js"></script>
 </body>
 </html>
