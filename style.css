@@ -223,7 +223,10 @@
       align-items: center;
       gap: 8px;
     }
-    
+    .card-value {
+  transform-origin: center;
+}
+
  .flame-alert {
   animation: flamePulse 1s infinite;
   color: #ef4444;
