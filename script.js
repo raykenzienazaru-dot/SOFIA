@@ -24,6 +24,9 @@
       document.getElementById("water").textContent = "NORMAL";
       document.getElementById("status").textContent = "All systems operational";
       document.getElementById("ai").textContent = "Environment normal, no anomalies detected";
+      document.getElementById("ai").textContent = "🚨 FIRE EMERGENCY DETECTED";
+document.getElementById("ai").classList.add("alert");
+
     }
 
     // Call initialization
@@ -125,6 +128,17 @@
           aiContent.classList.add("normal");
         }
       }
+else if (topic === "sofia/flame") {
+  element = document.getElementById("flame");
+
+  if (value === "1") {
+    displayValue = "🔥 API TERDETEKSI";
+    element.classList.add("flame-alert");
+  } else {
+    displayValue = "✅ AMAN";
+    element.classList.remove("flame-alert");
+  }
+}
 
       // Update element if found
       if (element && displayValue) {
