@@ -352,7 +352,7 @@ const humChart = createChart(
 
 const gasChart = createChart(
   document.getElementById("gasChart"),
-  "Gas MQ135",
+  "Gas",
   "#a855f7"
 );
 
