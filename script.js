@@ -52,7 +52,7 @@
     initializeTimestamps();
 
     client.on("connect", () => {
-      conn.textContent = "✅ Connected to EMQX Broker"
+      conn.textContent = " Connected to EMQX Broker"
       conn.style.color = "#10b981";
       statusDot.classList.add("connected");
       
