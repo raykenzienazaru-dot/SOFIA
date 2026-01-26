@@ -79,18 +79,21 @@
         element = document.getElementById("suhu");
         displayValue = `${value}<span class="card-unit">°C</span>`;
         updateSensorStatus("temp", parseFloat(value), 18, 28);
+          updateChart(tempChart, message.toString());
       } else if (topic === "sofia/lembap") {
         element = document.getElementById("lembap");
         displayValue = `${value}<span class="card-unit">%</span>`;
         updateSensorStatus("humidity", parseFloat(value), 40, 70);
+         updateChart(humChart, message.toString());
       } else if (topic === "sofia/gas") {
         element = document.getElementById("gas");
         displayValue = value.toUpperCase();
         updateGasStatus(value);
+          updateChart(gasChart, message.toString());
       } else if (topic === "sofia/motion") {
   element = document.getElementById("motion");
   const night = isNightMode();
-
+updateChart(motionChart, message.toString());
   if (value === "1") {
     displayValue = night ? "DETECTED (NIGHT ALERT)" : "DETECTED";
     element.classList.add("flame-alert");
@@ -106,10 +109,12 @@
         element = document.getElementById("distance");
         displayValue = `${value}<span class="card-unit">cm</span>`;
         updateDistanceStatus(parseFloat(value));
+        updateChart(distChart, message.toString());
       } else if (topic === "sofia/water") {
         element = document.getElementById("water");
         displayValue = value.toUpperCase();
         updateWaterStatus(value);
+         updateChart(waterChart, message.toString());
       } else if (topic === "sofia/flame") {
         element = document.getElementById("flame");
         if (value === "1" || value.toLowerCase() === "detected") {
@@ -309,3 +314,75 @@ updateModeUI();
         updateTimestamp(randomSensor);
       }
     }, 1000);
+    const maxPoints = 20;
+
+function createChart(ctx, label, color) {
+  return new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [{
+        label: label,
+        data: [],
+        borderColor: color,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+const tempChart = createChart(
+  document.getElementById("tempChart"),
+  "Suhu (°C)",
+  "#f97316"
+);
+
+const humChart = createChart(
+  document.getElementById("humChart"),
+  "Kelembapan (%)",
+  "#38bdf8"
+);
+
+const gasChart = createChart(
+  document.getElementById("gasChart"),
+  "Gas MQ135",
+  "#a855f7"
+);
+
+const distChart = createChart(
+  document.getElementById("distChart"),
+  "Jarak (cm)",
+  "#22c55e"
+);
+
+const waterChart = createChart(
+  document.getElementById("waterChart"),
+  "Water Level",
+  "#0ea5e9"
+);
+const motionChart = createChart(
+  document.getElementById("motionChart"),
+  "Motion PIR (0 = Clear, 1 = Detected)",
+  "#ef4444"
+);
+
+function updateChart(chart, value) {
+  const now = new Date().toLocaleTimeString();
+
+  chart.data.labels.push(now);
+  chart.data.datasets[0].data.push(Number(value));
+
+  if (chart.data.labels.length > maxPoints) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+
+  chart.update();
+}
