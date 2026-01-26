@@ -669,13 +669,20 @@
 }
 .chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
   margin-top: 20px;
-}
-
-canvas {
-  background: #0f172a;
-  border-radius: 12px;
   padding: 10px;
 }
+.chart-box {
+  background: #0f172a;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 240px !important;
+}
+
