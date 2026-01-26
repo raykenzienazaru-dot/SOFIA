@@ -88,17 +88,19 @@
         displayValue = value.toUpperCase();
         updateGasStatus(value);
       } else if (topic === "sofia/motion") {
-        element = document.getElementById("motion");
-        if (value === "1") {
-          displayValue = "DETECTED";
-          element.classList.add("flame-alert");
-          element.classList.remove("motion-normal");
-          updateSensorStatus("motion", 1, 0, 0);
-        } else {
-          displayValue = "CLEAR";
-          element.classList.add("motion-normal");
-          element.classList.remove("flame-alert");
-          updateSensorStatus("motion", 0, 0, 0);
+  element = document.getElementById("motion");
+  const night = isNightMode();
+
+  if (value === "1") {
+    displayValue = night ? "DETECTED (NIGHT ALERT)" : "DETECTED";
+    element.classList.add("flame-alert");
+    element.classList.remove("motion-normal");
+    updateSensorStatus("motion", 1, 0, 0);
+  } else {
+    displayValue = "CLEAR";
+    element.classList.add("motion-normal");
+    element.classList.remove("flame-alert");
+    updateSensorStatus("motion", 0, 0, 0);
         }
       } else if (topic === "sofia/distance") {
         element = document.getElementById("distance");
@@ -194,18 +196,22 @@
       
       if (!statusElement) return;
       
-      if (value < 10) {
-        statusElement.className = "status-indicator danger";
-        statusText.textContent = "Too close";
-        distanceElement.className = "card-value alert-high";
-      } else if (value < 30) {
-        statusElement.className = "status-indicator warning";
-        statusText.textContent = "Close";
-        distanceElement.className = "card-value alert-medium";
-      } else {
-        statusElement.className = "status-indicator";
-        statusText.textContent = "Safe";
-        distanceElement.className = "card-value alert-normal";
+      // Threshold berbeda siang & malam
+  const dangerLimit = night ? 5 : 10;
+  const warningLimit = night ? 15 : 30;
+
+  if (value < dangerLimit) {
+    statusElement.className = "status-indicator danger";
+    statusText.textContent = night ? "INTRUSION (Night)" : "Too close";
+    distanceElement.className = "card-value alert-high";
+  } else if (value < warningLimit) {
+    statusElement.className = "status-indicator warning";
+    statusText.textContent = night ? "Movement (Night)" : "Close";
+    distanceElement.className = "card-value alert-medium";
+  } else {
+    statusElement.className = "status-indicator";
+    statusText.textContent = "Safe";
+    distanceElement.className = "card-value alert-normal";
       }
     }
 
@@ -232,6 +238,31 @@
         waterElement.className = "card-value alert-normal";
       }
     }
+// ===== TIME MODE SYSTEM =====
+function isNightMode() {
+  const now = new Date();
+  const hour = now.getHours();
+  // Night mode: 21:00 - 06:00
+  return (hour >= 21 || hour < 6);
+}
+
+// Update mode display
+function updateModeUI() {
+  const modeElement = document.getElementById("mode");
+  if (!modeElement) return;
+
+  if (isNightMode()) {
+    modeElement.textContent = "🌙 NIGHT MODE (High Sensitivity)";
+    modeElement.className = "mode night";
+  } else {
+    modeElement.textContent = "☀️ DAY MODE (Normal Sensitivity)";
+    modeElement.className = "mode day";
+  }
+}
+
+// Refresh mode every minute
+setInterval(updateModeUI, 60000);
+updateModeUI();
 
     // Update status card styling
     function updateStatusCard(type, value) {
