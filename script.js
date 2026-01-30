@@ -71,29 +71,44 @@
       const value = message.toString()
       let element, displayValue;
 
-      // Get sensor name from topic
-      const sensor = topic.split('/')[1];
-      updateTimestamp(sensor);
+     // ===== TOPIC MAPPING =====
+const topicMap = {
+  suhu: "temp",
+  lembap: "humidity",
+  gas: "gas",
+  motion: "motion",
+  distance: "distance",
+  water: "water",
+  flame: "flame",
+  status: "status",
+  ai: "ai"
+};
+
+// Get sensor name from topic
+const raw = topic.split('/')[1];
+const sensor = topicMap[raw];
+if (sensor) updateTimestamp(sensor);
 
       if (topic === "sofia/suhu") {
         element = document.getElementById("suhu");
         displayValue = `${value}<span class="card-unit">°C</span>`;
         updateSensorStatus("temp", parseFloat(value), 18, 28);
-          updateChart(tempChart, message.toString());
+         
+  if (tempChart) updateChart(tempChart, message.toString()); 
       } else if (topic === "sofia/lembap") {
         element = document.getElementById("lembap");
         displayValue = `${value}<span class="card-unit">%</span>`;
         updateSensorStatus("humidity", parseFloat(value), 40, 70);
-         updateChart(humChart, message.toString());
+        if (humChart) updateChart(humChart, message.toString());
       } else if (topic === "sofia/gas") {
         element = document.getElementById("gas");
         displayValue = value.toUpperCase();
         updateGasStatus(value);
-          updateChart(gasChart, message.toString());
+        if (gasChart) updateChart(gasChart, message.toString());
       } else if (topic === "sofia/motion") {
   element = document.getElementById("motion");
   const night = isNightMode();
-updateChart(motionChart, message.toString());
+if (motionChart) updateChart(motionChart, message.toString());
   if (value === "1") {
     displayValue = night ? "DETECTED (NIGHT ALERT)" : "DETECTED";
     element.classList.add("flame-alert");
@@ -109,12 +124,12 @@ updateChart(motionChart, message.toString());
         element = document.getElementById("distance");
         displayValue = `${value}<span class="card-unit">cm</span>`;
         updateDistanceStatus(parseFloat(value));
-        updateChart(distChart, message.toString());
+       if (distChart) updateChart(distChart, message.toString());
       } else if (topic === "sofia/water") {
         element = document.getElementById("water");
         displayValue = value.toUpperCase();
         updateWaterStatus(value);
-         updateChart(waterChart, message.toString());
+        if (waterChart) updateChart(waterChart, message.toString());
       } else if (topic === "sofia/flame") {
         element = document.getElementById("flame");
         if (value === "1" || value.toLowerCase() === "detected") {
@@ -194,14 +209,15 @@ updateChart(motionChart, message.toString());
     }
 
     // Update distance status
-    function updateDistanceStatus(value) {
-      const statusElement = document.querySelector(".distance .status-indicator");
-      const statusText = document.querySelector(".distance .card-status span");
-      const distanceElement = document.getElementById("distance");
-      
-      if (!statusElement) return;
-      
-      // Threshold berbeda siang & malam
+   function updateDistanceStatus(value) {
+  const night = isNightMode(); // <-- TAMBAH INI
+
+  const statusElement = document.querySelector(".distance .status-indicator");
+  const statusText = document.querySelector(".distance .card-status span");
+  const distanceElement = document.getElementById("distance");
+
+  if (!statusElement) return;
+
   const dangerLimit = night ? 5 : 10;
   const warningLimit = night ? 15 : 30;
 
@@ -217,8 +233,9 @@ updateChart(motionChart, message.toString());
     statusElement.className = "status-indicator";
     statusText.textContent = "Safe";
     distanceElement.className = "card-value alert-normal";
-      }
-    }
+  }
+}
+
 
     // Update water status
     function updateWaterStatus(value) {
