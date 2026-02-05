@@ -4,12 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SOFIA</title>
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   <link rel="stylesheet" href="style.css">
+
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- MQTT (must be loaded before script.js uses it) -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-    <div class="container">
+  <div class="container">
+
     <!-- Header -->
     <div class="header">
       <div class="header-left">
@@ -24,25 +35,62 @@
           </div>
         </div>
       </div>
+
       <div class="connection-status">
         <div class="status-dot" id="statusDot"></div>
         <span id="conn">Connecting to EMQX Broker...</span>
         <i class="fas fa-sync-alt fa-spin" style="margin-left: auto; opacity: 0.7;"></i>
       </div>
     </div>
-<div id="mode" class="mode day">
-  ☀️ DAY MODE (Normal Sensitivity)
-</div>
+
+    <!-- Mode -->
+    <div id="mode" class="mode day">
+      ☀️ DAY MODE (Normal Sensitivity)
+    </div>
+
+    <!-- ===== SOFIA CHATBOT ===== -->
+    <div class="chatbot-panel">
+      <div class="chatbot-header">
+        <div class="chatbot-title">
+          <i class="fas fa-comments"></i>
+          <span>SOFIA Assistant</span>
+        </div>
+        <div class="chatbot-badges">
+          <span class="badge" id="botModeBadge">MODE: --</span>
+          <span class="badge" id="botConnBadge">MQTT: CONNECTING</span>
+        </div>
+      </div>
+
+      <div class="chatbot-messages" id="botMessages"></div>
+
+      <div class="chatbot-input">
+        <input id="botInput" type="text" placeholder="Tanya: suhu berapa? gas aman? mode sekarang? help..." />
+        <button id="botSend" class="bot-send" type="button">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="chatbot-quick">
+        <button class="quick-btn" type="button" data-q="suhu sekarang">Suhu</button>
+        <button class="quick-btn" type="button" data-q="kelembapan sekarang">Kelembapan</button>
+        <button class="quick-btn" type="button" data-q="gas sekarang">Gas</button>
+        <button class="quick-btn" type="button" data-q="motion sekarang">Motion</button>
+        <button class="quick-btn" type="button" data-q="jarak sekarang">Jarak</button>
+        <button class="quick-btn" type="button" data-q="water level sekarang">Water</button>
+        <button class="quick-btn" type="button" data-q="flame sekarang">Flame</button>
+        <button class="quick-btn" type="button" data-q="mode sekarang">Mode</button>
+      </div>
+    </div>
+
     <!-- Dashboard Cards -->
     <div class="dashboard">
-      <!-- Temperature Card -->
+
+      <!-- Temperature -->
       <div class="card temperature">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-thermometer-half"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
               <div>
                 <div class="card-title">TEMPERATURE</div>
                 <div class="card-status">
@@ -53,8 +101,9 @@
             </div>
             <div class="last-updated" id="temp-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="suhu">24.5<span class="card-unit">°C</span></div>
+            <div class="card-value" id="suhu">--<span class="card-unit">°C</span></div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Room temperature monitoring</span>
             </div>
@@ -62,14 +111,12 @@
         </div>
       </div>
 
-      <!-- Humidity Card -->
+      <!-- Humidity -->
       <div class="card humidity">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-tint"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-tint"></i></div>
               <div>
                 <div class="card-title">HUMIDITY</div>
                 <div class="card-status">
@@ -80,8 +127,9 @@
             </div>
             <div class="last-updated" id="humidity-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="lembap">65<span class="card-unit">%</span></div>
+            <div class="card-value" id="lembap">--<span class="card-unit">%</span></div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Air humidity level</span>
             </div>
@@ -89,14 +137,12 @@
         </div>
       </div>
 
-      <!-- Gas Level Card -->
+      <!-- Gas -->
       <div class="card gas">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-wind"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-wind"></i></div>
               <div>
                 <div class="card-title">GAS LEVEL</div>
                 <div class="card-status">
@@ -107,8 +153,9 @@
             </div>
             <div class="last-updated" id="gas-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="gas">LOW</div>
+            <div class="card-value" id="gas">--</div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Air quality monitoring</span>
             </div>
@@ -116,14 +163,12 @@
         </div>
       </div>
 
-      <!-- Motion Card -->
+      <!-- Motion -->
       <div class="card motion">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-running"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-running"></i></div>
               <div>
                 <div class="card-title">MOTION DETECTION</div>
                 <div class="card-status">
@@ -134,8 +179,9 @@
             </div>
             <div class="last-updated" id="motion-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value motion-normal" id="motion">CLEAR</div>
+            <div class="card-value motion-normal" id="motion">--</div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Presence detection sensor</span>
             </div>
@@ -143,14 +189,12 @@
         </div>
       </div>
 
-      <!-- Distance Card -->
+      <!-- Distance -->
       <div class="card distance">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-ruler-vertical"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-ruler-vertical"></i></div>
               <div>
                 <div class="card-title">DISTANCE</div>
                 <div class="card-status">
@@ -161,8 +205,9 @@
             </div>
             <div class="last-updated" id="distance-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="distance">45<span class="card-unit">cm</span></div>
+            <div class="card-value" id="distance">--<span class="card-unit">cm</span></div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Ultrasonic distance measurement</span>
             </div>
@@ -170,14 +215,12 @@
         </div>
       </div>
 
-      <!-- Water Level Card -->
+      <!-- Water -->
       <div class="card water">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-water"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-water"></i></div>
               <div>
                 <div class="card-title">WATER LEVEL</div>
                 <div class="card-status">
@@ -188,8 +231,9 @@
             </div>
             <div class="last-updated" id="water-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="water">NORMAL</div>
+            <div class="card-value" id="water">--</div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Liquid level monitoring</span>
             </div>
@@ -197,14 +241,12 @@
         </div>
       </div>
 
-      <!-- Flame Card -->
+      <!-- Flame -->
       <div class="card flame">
         <div class="card-content">
           <div class="card-header">
             <div class="card-icon-wrapper">
-              <div class="card-icon">
-                <i class="fas fa-fire"></i>
-              </div>
+              <div class="card-icon"><i class="fas fa-fire"></i></div>
               <div>
                 <div class="card-title">FLAME DETECTION</div>
                 <div class="card-status">
@@ -215,26 +257,28 @@
             </div>
             <div class="last-updated" id="flame-time">--:--</div>
           </div>
+
           <div class="card-value-container">
-            <div class="card-value" id="flame">NONE</div>
+            <div class="card-value" id="flame">--</div>
             <div class="card-footer">
               <span><i class="fas fa-info-circle"></i> Fire detection sensor</span>
             </div>
           </div>
         </div>
       </div>
+
     </div>
+
+    <!-- Charts -->
     <h2>SOFIA Sensor Charts</h2>
-
-<div class="chart-grid">
-  <div class="chart-box"><canvas id="tempChart"></canvas></div>
-  <div class="chart-box"><canvas id="humChart"></canvas></div>
-  <div class="chart-box"><canvas id="gasChart"></canvas></div>
-  <div class="chart-box"><canvas id="distChart"></canvas></div>
-  <div class="chart-box"><canvas id="waterChart"></canvas></div>
-  <div class="chart-box"><canvas id="motionChart"></canvas></div>
-</div>
-
+    <div class="chart-grid">
+      <div class="chart-box"><canvas id="tempChart"></canvas></div>
+      <div class="chart-box"><canvas id="humChart"></canvas></div>
+      <div class="chart-box"><canvas id="gasChart"></canvas></div>
+      <div class="chart-box"><canvas id="distChart"></canvas></div>
+      <div class="chart-box"><canvas id="waterChart"></canvas></div>
+      <div class="chart-box"><canvas id="motionChart"></canvas></div>
+    </div>
 
     <!-- Status Panel -->
     <div class="status-panel">
@@ -244,6 +288,7 @@
           All systems operational. Environment parameters within normal ranges.
         </div>
       </div>
+
       <div class="status-card">
         <h3><i class="fas fa-robot"></i> AI ANALYSIS</h3>
         <div class="status-content normal" id="ai">
@@ -258,30 +303,22 @@
         <i class="fas fa-brain"></i>
         <span>SOFIA IoT System</span>
       </div>
+
       <div class="tech-stack">
-        <div class="tech-item">
-          <i class="fas fa-microchip"></i>
-          <span>ESP32</span>
-        </div>
-        <div class="tech-item">
-          <i class="fas fa-broadcast-tower"></i>
-          <span>EMQX MQTT TLS</span>
-        </div>
-        <div class="tech-item">
-          <i class="fas fa-cloud"></i>
-          <span>Real-time Dashboard</span>
-        </div>
-        <div class="tech-item">
-          <i class="fas fa-brain"></i>
-          <span>AI Analytics</span>
-        </div>
+        <div class="tech-item"><i class="fas fa-microchip"></i><span>ESP32</span></div>
+        <div class="tech-item"><i class="fas fa-broadcast-tower"></i><span>EMQX MQTT TLS</span></div>
+        <div class="tech-item"><i class="fas fa-cloud"></i><span>Real-time Dashboard</span></div>
+        <div class="tech-item"><i class="fas fa-brain"></i><span>AI Analytics</span></div>
       </div>
+
       <div class="copyright">
         &copy; 2026 Smart Environment Monitoring System • v2.1.0
       </div>
     </div>
+
   </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- <script src="script.js"></script>
+
+  <!-- Your JS (load last, after DOM exists) -->
+  <script src="script.js"></script>
 </body>
 </html>
